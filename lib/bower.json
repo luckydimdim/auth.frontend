@@ -1,0 +1,25 @@
+{
+  "name": "auth",
+  "authors": [
+    "Andrey Kuzmenko <andrey.kuzmenko@yamalspg.ru>"
+  ],
+  "description": "auth module",
+  "main": "main.dart",
+  "keywords": [
+    "auth"
+  ],
+  "license": "yamal lng",
+  "homepage": "http://yamallng.ru/",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "web/components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.7"
+  }
+}
