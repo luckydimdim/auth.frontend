@@ -5,6 +5,8 @@ import 'package:angular2/router.dart';
 import 'loginModel.dart';
 import 'auth_service.dart';
 
+import 'package:alert/alert_service.dart';
+
 @Component(
     selector: 'auth',
     templateUrl: 'auth_component.html',
@@ -21,10 +23,10 @@ class AuthComponent implements OnInit {
 
   LoginModel model;
   final Router _router;
-  /*final AlertService _alertService;*/
+  final AlertService _alertService;
   final AuthenticationService _authenticationService;
 
-  AuthComponent(this._router, /*this._alertService,*/ this._authenticationService) {
+  AuthComponent(this._router, this._alertService, this._authenticationService) {
     model = new LoginModel();
   }
 
@@ -44,11 +46,10 @@ class AuthComponent implements OnInit {
           _router.navigate(['Desktop']);
       }
       else {
-        /*_alertService.Error('Ошибка при входе');*/
-        print('Неверный логин или пароль');
+        _alertService.Warning('Ошибка при входе. Логин или пароль не существуют');
       }
     }).catchError((e){
-      /*_alertService.Error('Ошибка при входе');*/
+      _alertService.Danger('Непредвиденная ошибка');
       print('Непредвиденная ошибка: ${e.toString()}');
     });
 
