@@ -1,1 +1,7 @@
-@import "/assets/auth/auth.css";
+@import "/assets/common/common.css";
+
+
+h1
+{
+    color:red;
+}

@@ -1,6 +1,7 @@
 import 'package:angular2/core.dart';
 import 'package:angular2/router.dart';
 
+
 import 'loginModel.dart';
 import 'auth_service.dart';
 
@@ -44,11 +45,11 @@ class AuthComponent implements OnInit {
       }
       else {
         /*_alertService.Error('Ошибка при входе');*/
-        print('Ошибка при входе');
+        print('Неверный логин или пароль');
       }
     }).catchError((e){
       /*_alertService.Error('Ошибка при входе');*/
-      print('Ошибка при входе');
+      print('Непредвиденная ошибка: ${e.toString()}');
     });
 
 

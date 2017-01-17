@@ -2,6 +2,8 @@ import 'dart:html';
 import 'dart:async';
 import 'dart:core';
 
+import 'package:http/browser_client.dart';
+
 import 'package:angular2/angular2.dart';
 
 
@@ -12,26 +14,25 @@ class AuthenticationService {
     return window.localStorage.containsKey('currentUser');
   }
 
-  Future<bool> login(String username, String password) async {
-    var url = "http://localhost:5000/api/authentication/login";
-    var request = new HttpRequest();
-    request.open("POST", url);
+  Future<bool> login(String login, String password) async {
 
-    request.send({
-      'content': 'this is a test',
-      'email': 'john@doe.com',
-      'number': '441276300056'
-    })
-        .then((response) {
-      window.localStorage['currentUser'] = 'fake data';
-      return true;
-    })
-        .catchError((e) {
-      logout();
-      return false;
+    var url = "http://localhost:5000/api/authentication/login";
+
+    var client = new BrowserClient();
+
+    var response = await client.post(url, body: {
+      'login': login,
+      'password': password
     });
 
-    return false;
+    print('Response status: ${response.statusCode}');
+    print('Response body: ${response.body}');
+
+    if (200== response.statusCode){
+      return true;
+    }
+    else
+      return false;
   }
 
   void logout() {
