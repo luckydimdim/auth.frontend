@@ -9,8 +9,7 @@ import 'package:alert/alert_service.dart';
 
 @Component(
     selector: 'auth',
-    templateUrl: 'auth_component.html',
-    styleUrls: const <String>['auth_component.css'])
+    templateUrl: 'auth_component.html')
 class AuthComponent implements OnInit {
 
   static const String route_name = "Auth";
@@ -30,9 +29,6 @@ class AuthComponent implements OnInit {
     model = new LoginModel();
   }
 
-  @Output()
-  final onAuth = new EventEmitter<bool>();
-
   @override
   void ngOnInit() {
 
@@ -47,7 +43,7 @@ class AuthComponent implements OnInit {
         var queryUrl = Uri.base.queryParameters['url'];
 
         if (queryUrl != '' && queryUrl != null)
-          _router.navigate([queryUrl]);
+          _router.navigateByUrl(queryUrl);
         else
           _router.navigate(['Master/Dashboard']);
       }
@@ -55,13 +51,10 @@ class AuthComponent implements OnInit {
         _alertService.Warning('Ошибка при входе. Логин или пароль не существуют');
       }
 
-      onAuth.emit(result);
-
     }).catchError((e){
       _alertService.Danger('Непредвиденная ошибка');
       print('Непредвиденная ошибка: ${e.toString()}');
     });
-
 
   }
 
