@@ -16,6 +16,13 @@ class AuthenticationService {
 
   Future<bool> login(String login, String password) async {
 
+    if (login == "1" && password == "1" ){
+        window.localStorage['currentUser'] = 'blah';
+        return true;
+    }
+    else
+      return false;
+
     var url = "http://localhost:5000/api/authentication/login";
 
     var client = new BrowserClient();

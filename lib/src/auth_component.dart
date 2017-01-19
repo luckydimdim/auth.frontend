@@ -30,24 +30,33 @@ class AuthComponent implements OnInit {
     model = new LoginModel();
   }
 
+  @Output()
+  final onAuth = new EventEmitter<bool>();
+
   @override
-  void ngOnInit() {}
+  void ngOnInit() {
+
+  }
 
   onSubmit() {
 
     _authenticationService.login(model.login, model.password).then((result){
       if (result == true) {
 
+
         var queryUrl = Uri.base.queryParameters['url'];
 
         if (queryUrl != '' && queryUrl != null)
           _router.navigate([queryUrl]);
         else
-          _router.navigate(['Desktop']);
+          _router.navigate(['Master/Dashboard']);
       }
       else {
         _alertService.Warning('Ошибка при входе. Логин или пароль не существуют');
       }
+
+      onAuth.emit(result);
+
     }).catchError((e){
       _alertService.Danger('Непредвиденная ошибка');
       print('Непредвиденная ошибка: ${e.toString()}');
