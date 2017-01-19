@@ -1,19 +1,18 @@
 import 'package:angular2/core.dart';
 import 'package:angular2/router.dart';
 
+import 'package:alert/alert_service.dart';
 
 import 'loginModel.dart';
 import 'auth_service.dart';
-
-import 'package:alert/alert_service.dart';
 
 @Component(
     selector: 'auth',
     templateUrl: 'auth_component.html')
 class AuthComponent implements OnInit {
 
-  static const String route_name = "Auth";
-  static const String route_path = "auth";
+  static const String route_name = 'Auth';
+  static const String route_path = 'auth';
   static const Route route = const Route(
       path: AuthComponent.route_path,
       component: AuthComponent,
@@ -35,7 +34,6 @@ class AuthComponent implements OnInit {
   }
 
   onSubmit() {
-
     _authenticationService.login(model.login, model.password).then((result){
       if (result == true) {
 
@@ -55,7 +53,5 @@ class AuthComponent implements OnInit {
       _alertService.Danger('Непредвиденная ошибка');
       print('Непредвиденная ошибка: ${e.toString()}');
     });
-
   }
-
 }
