@@ -36,8 +36,6 @@ class AuthComponent implements OnInit {
   onSubmit() {
     _authenticationService.login(model.login, model.password).then((result){
       if (result == true) {
-
-
         var queryUrl = Uri.base.queryParameters['url'];
 
         if (queryUrl != '' && queryUrl != null)

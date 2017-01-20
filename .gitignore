@@ -3,3 +3,13 @@
 pubspec.lock
 build
 .idea
+.sass-cache
+lib/*.frontend
+
+web/**/*.css
+!web/assets/style.css
+
+web/**/*.map
+!web/assets/style.css.map
+
+**/*.orig
