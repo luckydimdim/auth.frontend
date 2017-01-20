@@ -1,25 +1,36 @@
 {
-  "name": "auth",
+  "name": "cmas",
   "authors": [
-    "Andrey Kuzmenko <andrey.kuzmenko@yamalspg.ru>"
+    "Andrey Kuzmenko <andrey.kuzmenko@yamalspg.ru>",
+    "Dmitriy Litovchenko <dmitriy.litovchenko@yamalspg.ru>"
   ],
-  "description": "auth module",
-  "main": "main.dart",
+  "description": "cmas",
+  "main": "web/main.dart",
   "keywords": [
-    "auth"
+    "cmas"
   ],
-  "license": "yamal lng",
-  "homepage": "http://yamallng.ru/",
+  "license": "yamallng",
+  "homepage": "http://yamalspg.ru/",
   "private": true,
   "ignore": [
     "**/.*",
-    "node_modules",
     "bower_components",
-    "web/components",
+    "../web/vendor/",
     "test",
     "tests"
   ],
   "dependencies": {
-    "bootstrap": "^3.3.7"
-  }
+    "font-awesome": "fontawesome#^4.7.0",
+    "simple-line-icons": "^2.4.1",
+    "bootstrap": "v4.0.0-alpha.5",
+    "jquery": "^3.1.1",
+    "PACE": "pace#^1.0.2",
+    "chart.js": "^2.4.0",
+    "bootstrap-daterangepicker": "^2.1.25",
+    "toastr": "^2.1.3",
+    "gauge.js": "^1.2.1"
+  },
+  "resolutions": {
+    "jquery": "^3.1.1"
+  }  
 }
