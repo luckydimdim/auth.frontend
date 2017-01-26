@@ -2,7 +2,7 @@ import 'dart:html';
 import 'dart:async';
 import 'dart:core';
 
-import 'package:http/browser_client.dart';
+/*import 'package:http/browser_client.dart';*/
 
 import 'package:angular2/angular2.dart';
 
@@ -22,7 +22,7 @@ class AuthenticationService {
     }
     else
       return false;
-
+/*
     var url = "http://localhost:5000/api/authentication/login";
 
     var client = new BrowserClient();
@@ -39,7 +39,7 @@ class AuthenticationService {
       return true;
     }
     else
-      return false;
+      return false;*/
   }
 
   void logout() {
