@@ -16,8 +16,8 @@ dependencies:
     dart_to_js_script_rewriter: ^1.0.2    # Replaces Dart script tags with JavaScript script tags. https://pub.dartlang.org/packages/dart_to_js_script_rewriter
     http: ^0.11.1+9
     alert:        
-        git: https://github.com/luckydimdim/alert.frontend.git
-        #git: http://cm-ylng-msk-04/git/alert.frontend.git
+        #git: https://github.com/luckydimdim/alert.frontend.git
+        git: http://cm-ylng-msk-04/git/alert.frontend.git
       
 dev_dependencies:
     test: ^0.12.18                        # A library for writing dart unit tests. https://pub.dartlang.org/packages/test
