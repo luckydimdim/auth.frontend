@@ -12,21 +12,19 @@ import 'package:alert/alert_service.dart';
 
 
 bool get isDebug =>
-    (const String.fromEnvironment('PRODUCTION', defaultValue: 'false')) !=
-    'true';
+    (const String.fromEnvironment('PRODUCTION', defaultValue: 'false')) != 'true';
 
 main() async {
   if (isDebug) {
     reflector.trackUsage();
   }
 
-  ComponentRef ref = await bootstrap(AuthComponent,
-      [
+  ComponentRef ref = await bootstrap(AuthComponent, [
     ROUTER_PROVIDERS,
     const Provider(LocationStrategy, useClass: HashLocationStrategy),
     const Provider(AuthenticationService),
     const Provider(AlertService)
-  ] );
+  ]);
 
   if (isDebug) {
     print('Application in DebugMode');
