@@ -10,7 +10,6 @@ import 'package:auth/auth_component.dart';
 import 'package:auth/auth_service.dart';
 import 'package:alert/alert_service.dart';
 
-
 bool get isDebug =>
     (const String.fromEnvironment('PRODUCTION', defaultValue: 'false')) != 'true';
 
@@ -23,8 +22,7 @@ main() async {
     ROUTER_PROVIDERS,
     const Provider(LocationStrategy, useClass: HashLocationStrategy),
     const Provider(AuthenticationService),
-    const Provider(AlertService)
-  ]);
+    const Provider(AlertService)]);
 
   if (isDebug) {
     print('Application in DebugMode');
