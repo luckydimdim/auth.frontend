@@ -2,15 +2,13 @@ import 'package:angular2/core.dart';
 import 'package:angular2/router.dart';
 
 import 'package:alert/alert_service.dart';
-import 'package:master_layout/master_layout_component.dart';
 
 import 'loginModel.dart';
 import 'auth_service.dart';
 
 @Component(
   selector: 'auth',
-  templateUrl: 'auth_component.html',
-  directives: const[MasterLayoutComponent])
+  templateUrl: 'auth_component.html')
 class AuthComponent implements OnInit {
 
   static const String route_name = 'Auth';
