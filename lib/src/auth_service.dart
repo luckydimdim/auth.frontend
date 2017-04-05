@@ -7,6 +7,13 @@ import 'package:angular2/angular2.dart';
 @Injectable()
 class AuthenticationService {
 
+  /**
+   * Url компонента авторизации
+   * Может использоваться  компонентами, чтобы узнать, находится ли пользователь
+   * на странице авторизации или нет
+   */
+  String authPath = 'auth';
+
   bool isAuth() {
     return window.localStorage.containsKey('currentUser');
   }
