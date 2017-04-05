@@ -10,15 +10,6 @@ import 'auth_service.dart';
   selector: 'auth',
   templateUrl: 'auth_component.html')
 class AuthComponent implements OnInit {
-
-  static const String route_name = 'Auth';
-  static const String route_path = 'auth';
-  static const Route route = const Route(
-      path: AuthComponent.route_path,
-      component: AuthComponent,
-      name: AuthComponent.route_name
-  );
-
   LoginModel model;
   final Router _router;
   final AlertService _alertService;
