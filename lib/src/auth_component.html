@@ -1,36 +1,38 @@
 <div class="container d-table">
-    <div class="d-100vh-va-middle">
-        <div class="row">
-            <div class="col-md-5 offset-md-3">
-                <div class="card-group">
-                    <div class="card p-2">
-                        <div class="card-block">
-                            <form (ngSubmit)="onSubmit()" #authForm="ngForm">
-                            
-                            <h1>Авторизация</h1>
-                            <p class="text-muted">Введите логин и пароль</p>
-                            <div class="input-group mb-1">
+  <div class="d-100vh-va-middle">
+    <div class="row">
+      <div class="col-md-5 offset-md-3">
+        <div class="card-group">
+          <div class="card p-2">
+            <div class="card-block">
+              <form (ngSubmit)="onSubmit()" #authForm="ngForm">
+
+                <h1>Авторизация</h1>
+                <p class="text-muted">Введите логин и пароль</p>
+                <div class="input-group mb-1">
                                     <span class="input-group-addon"><i class="icon-user"></i>
                                     </span>
-                                <input type="text" class="form-control" placeholder="Логин" id="login" required [(ngModel)]="model.login" ngControl="login" #login="ngForm">
-                            </div>
-                            <div class="input-group mb-2">
+                  <input type="text" class="form-control" placeholder="Логин" id="login" required
+                         [(ngModel)]="model.login" ngControl="login" #login="ngForm">
+                </div>
+                <div class="input-group mb-2">
                                     <span class="input-group-addon"><i class="icon-lock"></i>
                                     </span>
-                                <input type="password" class="form-control" placeholder="Пароль" id="password" required [(ngModel)]="model.password" ngControl="password" #password="ngForm">
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-6">
-                                    <button type="submit" class="btn btn-primary px-2" [disabled]="!authForm.form.valid">Войти</button>
-                                </div>
-                            </div>
-                            </form>
-                            
-                        </div>
-                    </div>
-                  
+                  <input type="password" class="form-control" placeholder="Пароль" id="password" required
+                         [(ngModel)]="model.password" ngControl="password" #password="ngForm">
                 </div>
+                <div class="row">
+                  <div class="col-xs-6">
+                    <button type="submit" class="btn btn-primary px-2" [disabled]="!authForm.form.valid">Войти</button>
+                  </div>
+                </div>
+              </form>
+
             </div>
+          </div>
+
         </div>
+      </div>
     </div>
+  </div>
 </div>

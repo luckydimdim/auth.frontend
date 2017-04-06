@@ -32,7 +32,7 @@ class AuthComponent implements OnInit {
         if (queryUrl != '' && queryUrl != null)
           _router.navigateByUrl(queryUrl);
         else
-          _router.navigate(['Master/Dashboard']);
+          _router.parent.navigate(['Master/Dashboard']);
       }
       else {
         _alertService.Warning('Ошибка при входе. Логин или пароль не существуют');
