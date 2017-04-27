@@ -27,6 +27,9 @@ class AuthComponent implements OnInit {
   onSubmit() {
     _authenticationService.login(model.login, model.password).then((result){
       if (result == true) {
+
+        _authenticationService.startRefreshToken();
+
         var queryUrl = Uri.base.queryParameters['url'];
 
         if (queryUrl != '' && queryUrl != null)
@@ -35,7 +38,7 @@ class AuthComponent implements OnInit {
           _router.parent.navigate(['Master/Dashboard']);
       }
       else {
-        _alertService.Warning('Ошибка при входе. Логин или пароль не существуют');
+        _alertService.Warning('Ошибка. Неправильный логин или пароль');
       }
 
     }).catchError((e){

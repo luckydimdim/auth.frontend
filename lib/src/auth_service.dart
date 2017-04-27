@@ -18,14 +18,26 @@ class AuthenticationService {
    * на странице авторизации или нет
    */
   String authPath = 'auth';
+
+  /**
+   * Ключ, где хранится токен
+   */
   static const String jwtKey = "cmas-jwt";
+
+  /**
+   * Период обновления токена, в минутах
+   */
+  static const int _refreshTokenDuration = 15;
 
   final Client _http;
   final ConfigService _config;
   LoggerService _logger;
+  Timer _refreshTimer;
 
   AuthenticationService(this._http, this._config) {
     _logger = new LoggerService(_config);
+
+    startRefreshToken();
   }
 
   /**
@@ -43,6 +55,10 @@ class AuthenticationService {
       return window.localStorage[jwtKey];
     else
       return null;
+  }
+
+  void setToken(String token) {
+      window.localStorage[jwtKey] = token;
   }
 
   /**
@@ -83,7 +99,7 @@ class AuthenticationService {
       return response.body;
     }
     else if (response.statusCode == 400) {
-      return null;
+      return null;  // неправильный логин/пароль
     }
     else {
       _logger.error(
@@ -149,12 +165,48 @@ class AuthenticationService {
       return false;
     }
 
-    window.localStorage[jwtKey] = token;
+    setToken(token);
+
+    startRefreshToken();
 
     return true;
   }
 
   void logout() {
     window.localStorage.remove(jwtKey);
+
+    stopRefreshToken();
   }
+
+  void startRefreshToken() {
+
+    if (_refreshTimer != null && _refreshTimer.isActive)
+      return;
+
+    if (!isAuth())
+      return;
+
+    _refreshTimer = new Timer.periodic(new Duration(minutes: _refreshTokenDuration), _refreshTimerCallback);
+  }
+
+  void _refreshTimerCallback(Timer timer) {
+    _refreshToken().then((token){
+
+      if (token == null) {
+        timer.cancel();
+        logout();
+        return;
+      }
+
+      setToken(token);
+
+    });
+  }
+
+  void stopRefreshToken() {
+    if (_refreshTimer != null) {
+      _refreshTimer.cancel();
+    }
+  }
+
 }
