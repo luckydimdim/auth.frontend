@@ -145,9 +145,13 @@ class AuthenticationService {
 
     String token =  await _createToken(createTokenModel);
 
-    if (token != null ) {
-      window.localStorage[jwtKey] = token;
+    if (token == null ) {
+      return false;
     }
+
+    window.localStorage[jwtKey] = token;
+
+    return true;
   }
 
   void logout() {
