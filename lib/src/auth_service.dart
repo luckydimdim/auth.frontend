@@ -28,10 +28,16 @@ class AuthenticationService {
     _logger = new LoggerService(_config);
   }
 
+  /**
+   * Возвращает true, если пользовать аутентифицирован
+   */
   bool isAuth() {
     return window.localStorage.containsKey(jwtKey);
   }
 
+  /**
+   * Получить текущий токен
+   */
   String getToken() {
     if (isAuth())
       return window.localStorage[jwtKey];
@@ -39,6 +45,9 @@ class AuthenticationService {
       return null;
   }
 
+  /**
+   * Получить роли текущего пользователя
+   */
   List<String> getRoles() {
     var result = new List<String>();
 
@@ -48,7 +57,11 @@ class AuthenticationService {
     return result;
   }
 
-  Future<bool> _createToken(CreateTokenModel model) async {
+  /**
+   * Создать токен
+   * Возвращает токен в случае успеха. null в случае ошибки (неправильный логин/пароль)
+   */
+  Future<String> _createToken(CreateTokenModel model) async {
     _logger.trace('login. Url: ${ _config.helper.authUrl }/create-token');
 
     Response response = null;
@@ -60,18 +73,32 @@ class AuthenticationService {
           headers: {'Content-Type': 'application/json'});
     } catch (e) {
       _logger.error('Failed to login: $e');
-
-      return false;
+      throw new Exception(e);
     }
 
-    _logger.trace('login response: $response.');
+    _logger.trace(
+        'login response: Code: ${response.statusCode}  Body: ${response.body}');
 
-    window.localStorage[jwtKey] = response.body;
+    if (response.statusCode == 200) {
+      return response.body;
+    }
+    else if (response.statusCode == 400) {
+      return null;
+    }
+    else {
+      _logger.error(
+          'login response: Code: ${response.statusCode}  Body: ${response
+              .body}');
+      throw new Exception('Unknown HTTP error');
+    }
 
-    return true;
   }
 
-  Future<bool> _refreshToken() async {
+  /**
+   * Обновить токен
+   * Возвращает true в случае успеха. False в случае ошибки (некорректный токен)
+   */
+  Future<String> _refreshToken() async {
     _logger.trace(
         'refresh token. Url: ${ _config.helper.authUrl }/refresh-token');
 
@@ -80,25 +107,35 @@ class AuthenticationService {
     var currentToken = getToken();
 
     if (currentToken == null)
-      return false;
+      return null;
 
     RefreshTokenModel model = new RefreshTokenModel(currentToken);
 
     try {
-      response = await _http.post('${ _config.helper.authUrl }/refresh-token',
+      response = await
+      _http.post('${ _config.helper.authUrl }/refresh-token',
           body: model.toJsonString(),
           headers: {'Content-Type': 'application/json'});
     } catch (e) {
       _logger.error('Failed to login: $e');
-
-      return false;
+      throw new Exception(e);
     }
 
-    _logger.trace('refresh token response: $response.');
+    _logger.trace(
+        'refresh token response: Code: ${response.statusCode}  Body: ${response
+            .body}');
 
-    window.localStorage[jwtKey] = response.body;
-
-    return true;
+    if (response.statusCode == 200) {
+      return response.body;
+    }
+    else if (response.statusCode == 400) {
+      return null;
+    }
+    else {
+      _logger.error('refresh token response: Code: ${response
+          .statusCode}  Body: ${response.body}');
+      throw new Exception('Unknown HTTP error');
+    }
   }
 
   Future<bool> login(String login, String password) async {
@@ -106,8 +143,11 @@ class AuthenticationService {
       ..login = login
       ..password = password;
 
-    return await
-    _createToken(createTokenModel);
+    String token =  await _createToken(createTokenModel);
+
+    if (token != null ) {
+      window.localStorage[jwtKey] = token;
+    }
   }
 
   void logout() {
