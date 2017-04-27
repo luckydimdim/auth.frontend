@@ -14,6 +14,7 @@ class AuthComponent implements OnInit {
   final Router _router;
   final AlertService _alertService;
   final AuthenticationService _authenticationService;
+  String errors;
 
   AuthComponent(this._router, this._alertService, this._authenticationService) {
     model = new LoginModel();
@@ -25,6 +26,9 @@ class AuthComponent implements OnInit {
   }
 
   onSubmit() {
+
+    errors = null;
+
     _authenticationService.login(model.login, model.password).then((result){
       if (result == true) {
 
@@ -38,10 +42,12 @@ class AuthComponent implements OnInit {
           _router.parent.navigate(['Master/Dashboard']);
       }
       else {
+        errors = 'Неправильный логин или пароль';
         _alertService.Warning('Ошибка. Неправильный логин или пароль');
       }
 
     }).catchError((e){
+      errors = 'Непредвиденная ошибка';
       _alertService.Danger('Непредвиденная ошибка');
       print('Непредвиденная ошибка: ${e.toString()}');
     });

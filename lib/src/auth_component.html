@@ -22,8 +22,11 @@
                          [(ngModel)]="model.password" ngControl="password" #password="ngForm">
                 </div>
                 <div class="row">
-                  <div class="col-xs-6">
+                  <div class="col-xs-4">
                     <button type="submit" class="btn btn-primary px-2" [disabled]="!authForm.form.valid">Войти</button>
+                  </div>
+                  <div class="col-xs-8" *ngIf="errors != null">
+                    {{errors}}
                   </div>
                 </div>
               </form>
