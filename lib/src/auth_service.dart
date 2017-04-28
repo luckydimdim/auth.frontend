@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:html' hide Client;
 import 'dart:async';
 import 'dart:core';
@@ -8,6 +9,7 @@ import 'package:http/http.dart';
 import 'package:angular2/angular2.dart';
 import 'package:config/config_service.dart';
 import 'package:logger/logger_service.dart';
+import 'package:dart_jwt/dart_jwt.dart';
 
 @Injectable()
 class AuthenticationService {
@@ -22,7 +24,7 @@ class AuthenticationService {
   /**
    * Ключ, где хранится токен
    */
-  static const String jwtKey = "cmas-jwt";
+  static const String userInfoKey = "cmas-user-info";
 
   /**
    * Период обновления токена, в минутах
@@ -44,22 +46,30 @@ class AuthenticationService {
    * Возвращает true, если пользовать аутентифицирован
    */
   bool isAuth() {
-    return window.localStorage.containsKey(jwtKey);
+    return window.localStorage.containsKey(userInfoKey);
   }
 
   /**
    * Получить текущий токен
    */
   String getToken() {
-    if (isAuth())
-      return window.localStorage[jwtKey];
+    if (isAuth()) {
+      dynamic userData = JSON.decode(window.localStorage[userInfoKey]);
+      return userData['Token'];
+    }
     else
       return null;
   }
 
   void setToken(String token) {
-      window.localStorage[jwtKey] = token;
+
+
+    JsonWebToken jwt = new JsonWebToken.decode(token, claimSetParser: mapClaimSetParser);
+
+    window.localStorage[userInfoKey] = JSON.encode(
+        {"Login": jwt.payload.json['sub'], "Name": jwt.payload.json['snm'], "Roles": jwt.payload.json['roles'], "Token": token});
   }
+
 
   /**
    * Получить роли текущего пользователя
@@ -70,7 +80,22 @@ class AuthenticationService {
     if (!isAuth())
       return result;
 
-    return result;
+    dynamic userData = JSON.decode(window.localStorage[userInfoKey]);
+
+    return userData['Roles'];
+  }
+
+  /**
+   * Получить роли текущего пользователя
+   */
+  String getUserName() {
+
+    if (!isAuth())
+      return null;
+
+    dynamic userData = JSON.decode(window.localStorage[userInfoKey]);
+
+    return userData['Name'];
   }
 
   /**
@@ -99,7 +124,7 @@ class AuthenticationService {
       return response.body;
     }
     else if (response.statusCode == 400) {
-      return null;  // неправильный логин/пароль
+      return null; // неправильный логин/пароль
     }
     else {
       _logger.error(
@@ -107,7 +132,6 @@ class AuthenticationService {
               .body}');
       throw new Exception('Unknown HTTP error');
     }
-
   }
 
   /**
@@ -159,9 +183,9 @@ class AuthenticationService {
       ..login = login
       ..password = password;
 
-    String token =  await _createToken(createTokenModel);
+    String token = await _createToken(createTokenModel);
 
-    if (token == null ) {
+    if (token == null) {
       return false;
     }
 
@@ -173,25 +197,24 @@ class AuthenticationService {
   }
 
   void logout() {
-    window.localStorage.remove(jwtKey);
+    window.localStorage.remove(userInfoKey);
 
     stopRefreshToken();
   }
 
   void startRefreshToken() {
-
     if (_refreshTimer != null && _refreshTimer.isActive)
       return;
 
     if (!isAuth())
       return;
 
-    _refreshTimer = new Timer.periodic(new Duration(minutes: _refreshTokenDuration), _refreshTimerCallback);
+    _refreshTimer = new Timer.periodic(
+        new Duration(minutes: _refreshTokenDuration), _refreshTimerCallback);
   }
 
   void _refreshTimerCallback(Timer timer) {
-    _refreshToken().then((token){
-
+    _refreshToken().then((token) {
       if (token == null) {
         timer.cancel();
         logout();
@@ -199,7 +222,6 @@ class AuthenticationService {
       }
 
       setToken(token);
-
     });
   }
 
