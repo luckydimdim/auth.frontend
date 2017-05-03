@@ -82,7 +82,7 @@ class AuthenticationService {
 
     dynamic userData = JSON.decode(window.localStorage[userInfoKey]);
 
-    return userData['Roles'];
+    return userData['Roles'].split(',');
   }
 
   /**
