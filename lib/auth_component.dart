@@ -1,1 +1,1 @@
-export 'src/auth_component.dart';
+export 'src/authentication/authentication_component.dart';

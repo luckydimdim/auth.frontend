@@ -3,12 +3,10 @@ import 'package:angular2/router.dart';
 
 import 'package:alert/alert_service.dart';
 
-import 'loginModel.dart';
-import 'auth_service.dart';
+import 'login_model.dart';
+import '../../auth_service.dart';
 
-@Component(
-  selector: 'auth',
-  templateUrl: 'auth_component.html')
+@Component(selector: 'auth', templateUrl: 'authentication_component.html')
 class AuthComponent implements OnInit {
   LoginModel model;
   final Router _router;
@@ -21,17 +19,13 @@ class AuthComponent implements OnInit {
   }
 
   @override
-  void ngOnInit() {
-
-  }
+  void ngOnInit() {}
 
   onSubmit() {
-
     errors = null;
 
-    _authenticationService.login(model.login, model.password).then((result){
+    _authenticationService.login(model.login, model.password).then((result) {
       if (result == true) {
-
         _authenticationService.startRefreshToken();
 
         var queryUrl = Uri.base.queryParameters['url'];
@@ -40,13 +34,11 @@ class AuthComponent implements OnInit {
           _router.navigateByUrl(queryUrl);
         else
           _router.parent.navigate(['Master/Dashboard']);
-      }
-      else {
+      } else {
         errors = 'Неправильный логин или пароль';
         _alertService.Warning('Ошибка. Неправильный логин или пароль');
       }
-
-    }).catchError((e){
+    }).catchError((e) {
       errors = 'Непредвиденная ошибка';
       _alertService.Danger('Непредвиденная ошибка');
       print('Непредвиденная ошибка: ${e.toString()}');
