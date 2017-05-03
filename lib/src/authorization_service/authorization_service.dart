@@ -11,6 +11,7 @@ import '../cmas_jwt_claim_set.dart';
 class AuthorizationService {
 
   JsonWebToken _jwt;
+  String _token;
 
   AuthorizationService() {
     _cacheUserData();
@@ -22,6 +23,7 @@ class AuthorizationService {
     if (token == null)
       return;
 
+    _token = token;
     _jwt = new JsonWebToken.decode(token, claimSetParser: cmasClaimSetParser);
   }
 
@@ -29,6 +31,10 @@ class AuthorizationService {
    * Получить роли текущего пользователя
    */
   List<Role> getRoles() {
+
+    if (_token != window.localStorage[jwtKey])
+      _cacheUserData(); // перелогинились
+
     if (_jwt == null) return new List<Role>();
 
     return _jwt.payload.roles;
