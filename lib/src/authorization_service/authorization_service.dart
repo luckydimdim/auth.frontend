@@ -4,13 +4,12 @@ import 'dart:core';
 import 'package:angular2/angular2.dart';
 import '../consts.dart';
 import '../role.dart';
-import 'package:dart_jwt/dart_jwt.dart';
-import '../cmas_jwt_claim_set.dart';
+import '../jwt/cmas_jwt_claim_set.dart';
 
 @Injectable()
 class AuthorizationService {
 
-  JsonWebToken _jwt;
+  CmasJwtClaimSet _claimSet;
   String _token;
 
   AuthorizationService() {
@@ -24,7 +23,7 @@ class AuthorizationService {
       return;
 
     _token = token;
-    _jwt = new JsonWebToken.decode(token, claimSetParser: cmasClaimSetParser);
+    _claimSet = cmasClaimSetParser(token);
   }
 
   /**
@@ -35,9 +34,9 @@ class AuthorizationService {
     if (_token != window.localStorage[jwtKey])
       _cacheUserData(); // перелогинились
 
-    if (_jwt == null) return new List<Role>();
+    if (_claimSet == null) return new List<Role>();
 
-    return _jwt.payload.roles;
+    return _claimSet.roles;
   }
 
   bool isInRole(Role role) {

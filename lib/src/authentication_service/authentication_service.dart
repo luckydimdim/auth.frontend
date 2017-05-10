@@ -9,8 +9,8 @@ import 'package:http/http.dart';
 import 'package:angular2/angular2.dart';
 import 'package:config/config_service.dart';
 import 'package:logger/logger_service.dart';
-import 'package:dart_jwt/dart_jwt.dart';
-import '../cmas_jwt_claim_set.dart';
+
+import '../jwt/cmas_jwt_claim_set.dart';
 import '../consts.dart';
 
 @Injectable()
@@ -31,7 +31,7 @@ class AuthenticationService {
   final ConfigService _config;
   LoggerService _logger;
   Timer _refreshTimer;
-  JsonWebToken _jwt;
+  CmasJwtClaimSet _claimSet;
 
   AuthenticationService(this._http, this._config) {
     _logger = new LoggerService(_config);
@@ -60,7 +60,7 @@ class AuthenticationService {
 
   void removeToken() {
     window.localStorage.remove(jwtKey);
-    _jwt = null;
+    _claimSet = null;
   }
 
   void setToken(String token) {
@@ -75,16 +75,22 @@ class AuthenticationService {
     if (token == null)
       return;
 
-    _jwt = new JsonWebToken.decode(token, claimSetParser: cmasClaimSetParser);
+    try {
+      _claimSet = cmasClaimSetParser(token);
+    }
+    catch (e) {
+      removeToken();
+      rethrow;
+    }
   }
 
   /**
    *
    */
   String getUserName() {
-    if (!isAuth() || _jwt == null) return null;
+    if (!isAuth() || _claimSet == null) return null;
 
-    return _jwt.payload.name;
+    return _claimSet.name;
   }
 
   /**

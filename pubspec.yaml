@@ -15,7 +15,7 @@ dependencies:
     browser: ^0.10.0                      # The bootstrap dart.js script for Dart apps running in the browser. https://pub.dartlang.org/packages/browser
     dart_to_js_script_rewriter: ^1.0.2    # Replaces Dart script tags with JavaScript script tags. https://pub.dartlang.org/packages/dart_to_js_script_rewriter
     http: ^0.11.3                         # A composable, Future-based API for making HTTP requests. https://pub.dartlang.org/packages/http
-    dart_jwt: ^0.6.0                      # An implementation of [JSON Web Token](http://tools.ietf.org/html/draft-ietf-oauth-json-web-token-19) standard
+    cipher: ">=0.7.1 <0.8.0"
     reflectable: ^1.0.2
     alert:
       git: http://cm-ylng-msk-04/git/alert.frontend.git
