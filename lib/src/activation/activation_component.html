@@ -1,0 +1,48 @@
+<div class="container d-table">
+	<div class="d-100vh-va-middle">
+	<div class="row">
+		<div class="col-md-6 offset-md-2">
+			<div class="card mx-2">
+				<form (ngSubmit)="onSubmit()" #activateForm="ngForm">
+				<div class="card-block p-2">
+					<h1>Активация аккаунта</h1>
+					<p class="text-muted">Для активации аккаунта задайте пароль&nbsp;
+						<i class="fa fa-info-circle fa-lg mt-2" data-toggle="tooltip" data-placement="top" title="Минимум 7 символов. 2 буквы и 5 цифр, или 5 букв и 2 цифры. Обязательное использование букв разного регистра "></i>
+					</p>
+					
+					<div class="input-group mb-1">
+                            <span class="input-group-addon"><i class="icon-user"></i>
+                            </span>
+						<input type="text" class="form-control" placeholder="Логин" [ngModel]="login" required disabled>
+					</div>
+					
+					<div class="input-group mb-1">
+                            <span class="input-group-addon"><i class="icon-lock"></i>
+                            </span>
+						<input type="password" class="form-control" placeholder="Пароль" [(ngModel)]="password"  ngControl="_password" #_password="ngForm" id="password" required>
+					</div>
+					
+					<div class="input-group mb-2">
+                            <span class="input-group-addon"><i class="icon-lock"></i>
+                            </span>
+						<input type="password" class="form-control" placeholder="Повторите пароль" [(ngModel)]="password2" ngControl="_password2" #_password2="ngForm" id="password2" required>
+					</div>
+					
+					<div class="row">
+						<div class="col-xs-4">
+							<button type="submit" class="btn btn-block btn-success" [disabled]="!activateForm.form.valid">Активировать</button>
+						</div>
+						<div class="col-xs-8" *ngIf="errors != null">
+							{{errors}}
+						</div>
+					</div>
+					
+					
+				</div>
+				
+				</form>
+			</div>
+		</div>
+		</div>
+	</div>
+</div>

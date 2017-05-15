@@ -5,6 +5,7 @@ import 'dart:core';
 
 import 'create_token_model.dart';
 import 'refresh_token_model.dart';
+import 'activate_model.dart';
 import 'package:http/http.dart';
 import 'package:angular2/angular2.dart';
 import 'package:config/config_service.dart';
@@ -21,6 +22,8 @@ class AuthenticationService {
    * на странице авторизации или нет
    */
   String authPath = 'auth';
+
+  String activationPath = 'activation';
 
   /**
    * Период обновления токена, в минутах
@@ -122,6 +125,79 @@ class AuthenticationService {
       _logger
           .error('login response: Code: ${response.statusCode}  Body: ${response
               .body}');
+      throw new Exception('Unknown HTTP error');
+    }
+  }
+
+
+  /**
+   * Активировать учетку
+   */
+  Future<bool> activate(String login, String password, String actHash) async {
+    _logger.trace('activate. Url: ${ _config.helper.authUrl }/activate');
+
+    ActivateModel model = new ActivateModel()
+    ..login = login
+    ..password = password
+    ..hash = actHash;
+
+    Response response = null;
+
+    try {
+      response = await _http.post('${ _config.helper.authUrl }/activate',
+          body: model.toJsonString(),
+          headers: {'Content-Type': 'application/json'});
+    } catch (e) {
+      _logger.error('Failed to activate: $e');
+      throw new Exception(e);
+    }
+
+    _logger.trace(
+        'activate response: Code: ${response.statusCode}  Body: ${response.body}');
+
+    if (response.statusCode == 200) {
+      return true;
+    } else if (response.statusCode == 400) {
+      return false; // ошибка при активации
+    } else {
+      _logger
+          .error('activate response: Code: ${response.statusCode}  Body: ${response
+          .body}');
+      throw new Exception('Unknown HTTP error');
+    }
+  }
+
+  /**
+   * Проверить надежность пароля
+   */
+  Future<bool> checkPassSecurity(String password) async {
+    _logger.trace('activate. Url: ${ _config.helper.authUrl }/password-is-secure');
+
+    Response response = null;
+
+    try {
+      response = await _http.post('${ _config.helper.authUrl }/password-is-secure',
+          body: '{"password":"$password"}',
+          headers: {'Content-Type': 'application/json'});
+    } catch (e) {
+      _logger.error('Failed to activate: $e');
+      throw new Exception(e);
+    }
+
+    _logger.trace(
+        'activate response: Code: ${response.statusCode}  Body: ${response.body}');
+
+    if (response.statusCode == 200) {
+      var json = JSON.decode(response.body);
+
+      return json['result'];
+
+    } else if (response.statusCode == 400) {
+      return false; //
+    } else {
+      _logger
+          .error('activate response: Code: ${response.statusCode}  Body: ${response
+          .body}');
       throw new Exception('Unknown HTTP error');
     }
   }
