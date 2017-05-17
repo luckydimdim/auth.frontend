@@ -41,7 +41,14 @@ class AuthenticationService {
 
     _cacheUserData();
 
-    startRefreshToken();
+    _refreshToken().then((token) {
+
+      if (token != null) {
+        setToken(token);
+        startRefreshToken();
+      }
+
+    });
   }
 
   /**
