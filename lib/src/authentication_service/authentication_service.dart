@@ -230,7 +230,7 @@ class AuthenticationService {
           body: model.toJsonString(),
           headers: {'Content-Type': 'application/json'});
     } catch (e) {
-      _logger.error('Failed to login: $e');
+      _logger.error('Failed to refresh token: $e');
       throw new Exception(e);
     }
 
