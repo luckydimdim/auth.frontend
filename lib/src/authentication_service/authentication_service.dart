@@ -10,6 +10,7 @@ import 'package:http/http.dart';
 import 'package:angular2/angular2.dart';
 import 'package:config/config_service.dart';
 import 'package:logger/logger_service.dart';
+import 'package:http_wrapper/exceptions.dart';
 
 import '../jwt/cmas_jwt_claim_set.dart';
 import '../consts.dart';
@@ -229,9 +230,9 @@ class AuthenticationService {
       response = await _http.post('${ _config.helper.authUrl }/refresh-token',
           body: model.toJsonString(),
           headers: {'Content-Type': 'application/json'});
-    } catch (e) {
+    } on ClientException catch (e) {
       _logger.error('Failed to refresh token: $e');
-      throw new Exception(e);
+      throw new NonCriticalError(null, e.message);
     }
 
     _logger.trace(
