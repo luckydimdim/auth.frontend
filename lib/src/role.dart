@@ -15,5 +15,10 @@ enum Role {
   /**
    * Подрядчик
    */
-  Contractor
+  Contractor,
+
+  /**
+   * Администратор
+   */
+  Administrator
 }

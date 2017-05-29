@@ -9,11 +9,14 @@ List<Role> _convertStrToRoles(String rolesString) {
 
   var strRolesArray = rolesString.split(',');
 
+  // FIXME: сделать парсер перечислений
   strRolesArray.forEach((r) {
     if (r.toUpperCase().trim() == 'CUSTOMER')
       result.add(Role.Customer);
     else if (r.toUpperCase().trim() == 'CONTRACTOR')
       result.add(Role.Contractor);
+    else if (r.toUpperCase().trim() == 'ADMINISTRATOR')
+      result.add(Role.Administrator);
     else
       result.add(Role.Unknown);
   });
