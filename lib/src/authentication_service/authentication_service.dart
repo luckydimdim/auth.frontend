@@ -6,6 +6,7 @@ import 'dart:core';
 import 'create_token_model.dart';
 import 'refresh_token_model.dart';
 import 'activate_model.dart';
+import 'send_act_link_model.dart';
 import 'package:http/http.dart';
 import 'package:angular2/angular2.dart';
 import 'package:config/config_service.dart';
@@ -164,6 +165,46 @@ class AuthenticationService {
         'activate response: Code: ${response.statusCode}  Body: ${response.body}');
 
     if (response.statusCode == 200) {
+      return true;
+    } else if (response.statusCode == 400) {
+      return false; // ошибка при активации
+    } else {
+      _logger
+          .error('activate response: Code: ${response.statusCode}  Body: ${response
+          .body}');
+      throw new Exception('Unknown HTTP error');
+    }
+  }
+
+  /**
+   * Выслать ссылку на активацию пользователя
+   */
+  Future<bool> sendActivationLink(String login, String mail) async {
+    _logger.trace('send activation link. Url: ${ _config.helper.authUrl }/send-activation-link');
+
+    SendActLinkModel model = new SendActLinkModel()
+      ..login = login
+      ..email = mail;
+
+    Response response = null;
+
+    try {
+      response = await _http.post('${ _config.helper.authUrl }/send-activation-link',
+          body: model.toJsonString(),
+          headers: {'Content-Type': 'application/json', "Authorization": getToken()});
+    } catch (e) {
+      _logger.error('Failed to send activation link: $e');
+      throw new Exception(e);
+    }
+
+    _logger.trace(
+        'send activation link response: Code: ${response.statusCode}  Body: ${response.body}');
+
+    if (response.statusCode == 401) {
+      // Unauthorized
+      throw new UnauthorizedError();
+    }
+    else if (response.statusCode == 200) {
       return true;
     } else if (response.statusCode == 400) {
       return false; // ошибка при активации
