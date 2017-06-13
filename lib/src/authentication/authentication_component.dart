@@ -1,12 +1,19 @@
+import 'dart:html';
+import 'dart:async';
+
 import 'package:angular2/core.dart';
 import 'package:angular2/router.dart';
 
 import 'package:alert/alert_service.dart';
+import 'package:angular_utils/cm_loading_btn_directive.dart';
 
 import 'login_model.dart';
 import '../../auth_service.dart';
 
-@Component(selector: 'auth', templateUrl: 'authentication_component.html')
+@Component(
+    selector: 'auth',
+    templateUrl: 'authentication_component.html',
+    directives: const [CmLoadingBtnDirective])
 class AuthComponent implements OnInit {
   LoginModel model;
   final Router _router;
@@ -21,10 +28,13 @@ class AuthComponent implements OnInit {
   @override
   void ngOnInit() {}
 
-  onSubmit() {
+  Future onSubmit() async {
     errors = null;
 
-    _authenticationService.login(model.login, model.password).then((result) {
+    try {
+      var result =
+          await _authenticationService.login(model.login, model.password);
+
       if (result == true) {
         _authenticationService.startRefreshToken();
 
@@ -38,10 +48,10 @@ class AuthComponent implements OnInit {
         errors = 'Неправильный логин или пароль';
         _alertService.Warning('Ошибка. Неправильный логин или пароль');
       }
-    }).catchError((e) {
+    } catch (e) {
       errors = 'Непредвиденная ошибка';
       _alertService.Danger('Непредвиденная ошибка');
       print('Непредвиденная ошибка: ${e.toString()}');
-    });
+    }
   }
 }

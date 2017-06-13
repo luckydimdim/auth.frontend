@@ -2,10 +2,13 @@ import 'package:angular2/core.dart';
 import 'package:angular2/router.dart';
 import '../../auth_service.dart';
 import 'dart:html';
+import 'package:angular_utils/directives.dart';
 
-@Component(selector: 'activation', templateUrl: 'activation_component.html')
-class ActivationComponent  implements OnInit {
-
+@Component(
+    selector: 'activation',
+    templateUrl: 'activation_component.html',
+    directives: const [CmLoadingBtnDirective])
+class ActivationComponent implements OnInit {
   final AuthenticationService _authenticationService;
   final Router _router;
   String actHash;
@@ -14,34 +17,29 @@ class ActivationComponent  implements OnInit {
   String password;
   String password2;
 
-
-  ActivationComponent(this._authenticationService, RouteParams params, this._router) {
+  ActivationComponent(
+      this._authenticationService, RouteParams params, this._router) {
     actHash = params.get('actHash');
     login = params.get('login');
   }
 
   @override
-  void ngOnInit() {
-
-  }
+  void ngOnInit() {}
 
   onSubmit() async {
     errors = null;
 
     if (actHash == '' || actHash == null || login == '' || login == null) {
       errors = "Некорректная ссылка активации";
-    }
-    else if (password != password2) {
+    } else if (password != password2) {
       errors = "Пароли не совпадают";
     }
 
     if (errors == null) {
       bool secured = false;
       try {
-        secured = await this._authenticationService.checkPassSecurity(
-            password);
-      }
-      catch(e) {
+        secured = await this._authenticationService.checkPassSecurity(password);
+      } catch (e) {
         errors = 'Произошла непредвиденная ошибка';
       }
 

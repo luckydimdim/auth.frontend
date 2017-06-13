@@ -8,7 +8,6 @@ import '../jwt/cmas_jwt_claim_set.dart';
 
 @Injectable()
 class AuthorizationService {
-
   CmasJwtClaimSet _claimSet;
   String _token;
 
@@ -17,10 +16,9 @@ class AuthorizationService {
   }
 
   void _cacheUserData() {
-    var token =  window.localStorage[jwtKey];
+    var token = window.localStorage[jwtKey];
 
-    if (token == null)
-      return;
+    if (token == null) return;
 
     _token = token;
     _claimSet = cmasClaimSetParser(token);
@@ -30,7 +28,6 @@ class AuthorizationService {
    * Получить роли текущего пользователя
    */
   List<Role> getRoles() {
-
     if (_token != window.localStorage[jwtKey])
       _cacheUserData(); // перелогинились
 
@@ -42,11 +39,8 @@ class AuthorizationService {
   bool isInRole(Role role) {
     List<Role> roles = getRoles();
 
-    if (roles == null)
-      return false;
+    if (roles == null) return false;
 
     return roles.contains(role);
   }
-
-
 }

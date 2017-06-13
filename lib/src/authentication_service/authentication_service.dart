@@ -44,12 +44,10 @@ class AuthenticationService {
     _cacheUserData();
 
     _refreshToken().then((token) {
-
       if (token != null) {
         setToken(token);
         startRefreshToken();
       }
-
     });
   }
 
@@ -84,13 +82,11 @@ class AuthenticationService {
   void _cacheUserData() {
     var token = getToken();
 
-    if (token == null)
-      return;
+    if (token == null) return;
 
     try {
       _claimSet = cmasClaimSetParser(token);
-    }
-    catch (e) {
+    } catch (e) {
       removeToken();
       rethrow;
     }
@@ -138,7 +134,6 @@ class AuthenticationService {
     }
   }
 
-
   /**
    * Активировать учетку
    */
@@ -146,9 +141,9 @@ class AuthenticationService {
     _logger.trace('activate. Url: ${ _config.helper.authUrl }/activate');
 
     ActivateModel model = new ActivateModel()
-    ..login = login
-    ..password = password
-    ..hash = actHash;
+      ..login = login
+      ..password = password
+      ..hash = actHash;
 
     Response response = null;
 
@@ -169,8 +164,8 @@ class AuthenticationService {
     } else if (response.statusCode == 400) {
       return false; // ошибка при активации
     } else {
-      _logger
-          .error('activate response: Code: ${response.statusCode}  Body: ${response
+      _logger.error(
+          'activate response: Code: ${response.statusCode}  Body: ${response
           .body}');
       throw new Exception('Unknown HTTP error');
     }
@@ -180,7 +175,8 @@ class AuthenticationService {
    * Выслать ссылку на активацию пользователя
    */
   Future<bool> sendActivationLink(String login, String mail) async {
-    _logger.trace('send activation link. Url: ${ _config.helper.authUrl }/send-activation-link');
+    _logger.trace(
+        'send activation link. Url: ${ _config.helper.authUrl }/send-activation-link');
 
     SendActLinkModel model = new SendActLinkModel()
       ..login = login
@@ -189,9 +185,13 @@ class AuthenticationService {
     Response response = null;
 
     try {
-      response = await _http.post('${ _config.helper.authUrl }/send-activation-link',
+      response = await _http.post(
+          '${ _config.helper.authUrl }/send-activation-link',
           body: model.toJsonString(),
-          headers: {'Content-Type': 'application/json', "Authorization": getToken()});
+          headers: {
+            'Content-Type': 'application/json',
+            "Authorization": getToken()
+          });
     } catch (e) {
       _logger.error('Failed to send activation link: $e');
       throw new Exception(e);
@@ -203,14 +203,13 @@ class AuthenticationService {
     if (response.statusCode == 401) {
       // Unauthorized
       throw new UnauthorizedError();
-    }
-    else if (response.statusCode == 200) {
+    } else if (response.statusCode == 200) {
       return true;
     } else if (response.statusCode == 400) {
       return false; // ошибка при активации
     } else {
-      _logger
-          .error('activate response: Code: ${response.statusCode}  Body: ${response
+      _logger.error(
+          'activate response: Code: ${response.statusCode}  Body: ${response
           .body}');
       throw new Exception('Unknown HTTP error');
     }
@@ -220,12 +219,14 @@ class AuthenticationService {
    * Проверить надежность пароля
    */
   Future<bool> checkPassSecurity(String password) async {
-    _logger.trace('activate. Url: ${ _config.helper.authUrl }/password-is-secure');
+    _logger
+        .trace('activate. Url: ${ _config.helper.authUrl }/password-is-secure');
 
     Response response = null;
 
     try {
-      response = await _http.post('${ _config.helper.authUrl }/password-is-secure',
+      response = await _http.post(
+          '${ _config.helper.authUrl }/password-is-secure',
           body: '{"password":"$password"}',
           headers: {'Content-Type': 'application/json'});
     } catch (e) {
@@ -240,12 +241,11 @@ class AuthenticationService {
       var json = JSON.decode(response.body);
 
       return json['result'];
-
     } else if (response.statusCode == 400) {
       return false; //
     } else {
-      _logger
-          .error('activate response: Code: ${response.statusCode}  Body: ${response
+      _logger.error(
+          'activate response: Code: ${response.statusCode}  Body: ${response
           .body}');
       throw new Exception('Unknown HTTP error');
     }
@@ -310,7 +310,6 @@ class AuthenticationService {
   }
 
   void logout() {
-
     removeToken();
 
     stopRefreshToken();
