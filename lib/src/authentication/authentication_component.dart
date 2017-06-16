@@ -43,7 +43,7 @@ class AuthComponent implements OnInit {
         if (queryUrl != '' && queryUrl != null)
           _router.navigateByUrl(queryUrl);
         else
-          _router.parent.navigate(['Master/Dashboard']);
+          _router.parent.navigate(['Master']);
       } else {
         errors = 'Неправильный логин или пароль';
         _alertService.Warning('Ошибка. Неправильный логин или пароль');
