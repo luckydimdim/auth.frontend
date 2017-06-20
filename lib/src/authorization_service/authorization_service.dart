@@ -43,4 +43,12 @@ class AuthorizationService {
 
     return roles.contains(role);
   }
+
+  bool isOneRole(Role role) {
+    List<Role> roles = getRoles();
+
+    if (roles == null) return false;
+
+    return (roles.contains(role) && roles.length == 1);
+  }
 }
